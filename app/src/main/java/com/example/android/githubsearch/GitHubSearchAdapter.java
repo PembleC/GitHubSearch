@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class GitHubSearchAdapter extends RecyclerView.Adapter<GitHubSearchAdapter.SearchResultViewHolder> {
-    private ArrayList<String> mSearchResultsList;
+import com.example.android.githubsearch.data.GitHubRepo;
 
-    public void updateSearchResults(ArrayList<String> searchResultsList) {
+public class GitHubSearchAdapter extends RecyclerView.Adapter<GitHubSearchAdapter.SearchResultViewHolder> {
+    private ArrayList<GitHubRepo> mSearchResultsList;
+
+    public void updateSearchResults(ArrayList<GitHubRepo> searchResultsList) {
         mSearchResultsList = searchResultsList;
         notifyDataSetChanged();
     }
@@ -48,8 +50,8 @@ public class GitHubSearchAdapter extends RecyclerView.Adapter<GitHubSearchAdapte
             mSearchResultTV = itemView.findViewById(R.id.tv_search_result);
         }
 
-        void bind(String searchResult) {
-            mSearchResultTV.setText(searchResult);
+        void bind(GitHubRepo repo) {
+            mSearchResultTV.setText(repo.full_name);
         }
     }
 }

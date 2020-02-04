@@ -11,7 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.example.android.githubsearch.data.GitHubRepo;
 import com.example.android.githubsearch.utils.GitHubUtils;
 import com.example.android.githubsearch.utils.NetworkUtils;
 
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mSearchResultsRV;
     private EditText mSearchBoxET;
+    private ProgressBar mLoadingIndicatorPB;
+    private TextView mErrorMessage;
     private GitHubSearchAdapter mGitHubSearchAdapter;
 
     private String[] dummySearchResults = {
@@ -53,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         mGitHubSearchAdapter = new GitHubSearchAdapter();
         mSearchResultsRV.setAdapter(mGitHubSearchAdapter);
 
+        mLoadingIndicatorPB =  findViewById(R.id.pb_loading_indicator);
+        mErrorMessage = findViewById(R.id.tv_error_message);
+
         Button searchButton = findViewById(R.id.btn_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
 
     // Pass in a String, Progress Bar=void, Returns JSON String
     public class GitHubSearchTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicatorPB.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected String doInBackground(String... strings) {    // Variable number of arguments;
             String url = strings[0];                            // Arguments are stored as array
@@ -92,13 +107,26 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            mLoadingIndicatorPB.setVisibility(View.INVISIBLE);                  // Show the progress bar
             if (s != null){
-                ArrayList<String> searchResultsList = new ArrayList<>();        // Create a new Array
-                searchResultsList.add(s);                                       // Add output to the array
+                mErrorMessage.setVisibility(View.INVISIBLE);                    // Hide error message
+                mSearchResultsRV.setVisibility(View.VISIBLE);                   // Show the results
+
+
+                //ArrayList<String> searchResultsList = new ArrayList<>();        // Create a new Array
+                //searchResultsList.add(s);                                       // Add output to the array
+
+                ArrayList<GitHubRepo> search
+
+
                 mGitHubSearchAdapter.updateSearchResults(searchResultsList);    // Update the results
+
+
                 mSearchBoxET.setText("");                                       // Clear text box
 
-
+            } else {
+                mErrorMessage.setVisibility(View.VISIBLE);                      // Show error message
+                mSearchResultsRV.setVisibility(View.INVISIBLE);                 // Hide "Results"
             }
 
         }
