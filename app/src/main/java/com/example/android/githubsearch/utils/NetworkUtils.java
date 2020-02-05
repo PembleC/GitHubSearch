@@ -13,7 +13,7 @@ public class NetworkUtils {
         Request request = new Request.Builder().url(url).build();
         Response response = mHTTPClient.newCall(request).execute();
         try {
-            return response.body().toString();
+            return response.body().string();
         } finally {
             response.close();
         }
