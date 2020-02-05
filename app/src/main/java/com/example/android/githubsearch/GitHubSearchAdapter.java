@@ -14,6 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class GitHubSearchAdapter extends RecyclerView.Adapter<GitHubSearchAdapter.SearchResultViewHolder> {
     private ArrayList<GitHubRepo> mSearchResultsList;
+    private OnSearchResultClickListener mListener;
+
+    interface OnSearchResultClickListener {
+        public void onSearchResultClicked(GitHubRepo repo);
+    }
+
+    public GitHubSearchAdapter(OnSearchResultClickListener listener){
+        mListener = listener;
+    }
 
     public void updateSearchResults(ArrayList<GitHubRepo> searchResultsList) {
         mSearchResultsList = searchResultsList;
