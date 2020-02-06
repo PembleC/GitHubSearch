@@ -112,16 +112,11 @@ public class MainActivity extends AppCompatActivity {
                 mErrorMessage.setVisibility(View.INVISIBLE);                    // Hide error message
                 mSearchResultsRV.setVisibility(View.VISIBLE);                   // Show the results
 
-
                 //ArrayList<String> searchResultsList = new ArrayList<>();        // Create a new Array
                 //searchResultsList.add(s);                                       // Add output to the array
 
-                ArrayList<GitHubRepo> search
-
-
+                ArrayList<GitHubRepo> searchResultsList = GitHubUtils.parseGitHubSearchResults(s);
                 mGitHubSearchAdapter.updateSearchResults(searchResultsList);    // Update the results
-
-
                 mSearchBoxET.setText("");                                       // Clear text box
 
             } else {
