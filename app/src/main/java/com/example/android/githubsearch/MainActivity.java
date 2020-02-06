@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,27 +23,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GitHubSearchAdapter.OnSearchResultClickListener{
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mSearchResultsRV;
     private EditText mSearchBoxET;
     private ProgressBar mLoadingIndicatorPB;
-    private TextView mErrorMessage;
+    private TextView mErrorMessageTV;
     private GitHubSearchAdapter mGitHubSearchAdapter;
-
-    private String[] dummySearchResults = {
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results",
-            "Dummy search results"
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
         mSearchResultsRV.setLayoutManager(new LinearLayoutManager(this));
         mSearchResultsRV.setHasFixedSize(true);
 
-        mGitHubSearchAdapter = new GitHubSearchAdapter();
+        mGitHubSearchAdapter = new GitHubSearchAdapter(this);
         mSearchResultsRV.setAdapter(mGitHubSearchAdapter);
 
-        mLoadingIndicatorPB =  findViewById(R.id.pb_loading_indicator);
-        mErrorMessage = findViewById(R.id.tv_error_message);
+        mLoadingIndicatorPB = findViewById(R.id.pb_loading_indicator);
+        mErrorMessageTV = findViewById(R.id.tv_error_message);
 
         Button searchButton = findViewById(R.id.btn_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -68,20 +56,24 @@ public class MainActivity extends AppCompatActivity {
                 String searchQuery = mSearchBoxET.getText().toString();
                 if (!TextUtils.isEmpty(searchQuery)) {
                     doGitHubSearch(searchQuery);
-                    //mGitHubSearchAdapter.updateSearchResults(new ArrayList<String>(Arrays.asList(dummySearchResults)));
+//                    mGitHubSearchAdapter.updateSearchResults(new ArrayList<String>(Arrays.asList(dummySearchResults)));
                 }
             }
         });
     }
 
-    private void doGitHubSearch (String searchQueries){
-        String url = GitHubUtils.buildGitHubSearchURL(searchQueries);       //Builds the URL in Github Utils
+    private void doGitHubSearch(String searchQuery) {
+        String url = GitHubUtils.buildGitHubSearchURL(searchQuery);     //Builds the URL in Github Utils
         Log.d(TAG, "querying url: " + url);
         new GitHubSearchTask().execute(url);
-
-
     }
 
+    @Override
+    public void onSearchResultClicked(GitHubRepo repo) {
+        Intent searchResultDetailActivityIntent = new Intent(this, RepoDetailActivity.class);
+        startActivity(searchResultDetailActivityIntent);            // Starts the new activity
+
+    }
 
     // Pass in a String, Progress Bar=void, Returns JSON String
     public class GitHubSearchTask extends AsyncTask<String, Void, String> {
@@ -93,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) {    // Variable number of arguments;
-            String url = strings[0];                            // Arguments are stored as array
+        protected String doInBackground(String... strings) {        // Variable number of arguments;
+            String url = strings[0];                                // Arguments are stored as array
             String searchResults = null;
             try {
-                searchResults = NetworkUtils.doHttpGet(url);    // Do HTTP Call
+                searchResults = NetworkUtils.doHttpGet(url);        // Do HTTP Call
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -123,11 +115,6 @@ public class MainActivity extends AppCompatActivity {
                 mErrorMessage.setVisibility(View.VISIBLE);                      // Show error message
                 mSearchResultsRV.setVisibility(View.INVISIBLE);                 // Hide "Results"
             }
-
         }
-
-
     }
-
-
 }

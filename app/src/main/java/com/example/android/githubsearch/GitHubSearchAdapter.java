@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.githubsearch.data.GitHubRepo;
+
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,15 @@ import com.example.android.githubsearch.data.GitHubRepo;
 
 public class GitHubSearchAdapter extends RecyclerView.Adapter<GitHubSearchAdapter.SearchResultViewHolder> {
     private ArrayList<GitHubRepo> mSearchResultsList;
+    private OnSearchResultClickListener mListener;
+
+    interface OnSearchResultClickListener {
+        public void onSearchResultClicked(GitHubRepo repo);
+    }
+
+    public GitHubSearchAdapter(OnSearchResultClickListener listener){
+        mListener = listener;
+    }
 
     public void updateSearchResults(ArrayList<GitHubRepo> searchResultsList) {
         mSearchResultsList = searchResultsList;
