@@ -36,13 +36,4 @@ public class GitHubUtils {
         }
     }
 
-    public static ArrayList<GitHubRepo> parseGitHubSearchResults(String json){
-        Gson gson = new Gson();
-        GitHubSearchResults results = gson.fromJson(json, GitHubSearchResults.class);
-        if (results != null && results.items !=  null){
-            return results.items;
-        } else {
-            return null;
-        }
-    }
 }

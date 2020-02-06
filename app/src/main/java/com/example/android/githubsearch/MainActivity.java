@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements GitHubSearchAdapt
             super.onPostExecute(s);
             mLoadingIndicatorPB.setVisibility(View.INVISIBLE);                  // Show the progress bar
             if (s != null){
-                mErrorMessage.setVisibility(View.INVISIBLE);                    // Hide error message
+                mErrorMessageTV.setVisibility(View.INVISIBLE);                    // Hide error message
                 mSearchResultsRV.setVisibility(View.VISIBLE);                   // Show the results
 
                 //ArrayList<String> searchResultsList = new ArrayList<>();        // Create a new Array
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements GitHubSearchAdapt
                 mSearchBoxET.setText("");                                       // Clear text box
 
             } else {
-                mErrorMessage.setVisibility(View.VISIBLE);                      // Show error message
+                mErrorMessageTV.setVisibility(View.VISIBLE);                      // Show error message
                 mSearchResultsRV.setVisibility(View.INVISIBLE);                 // Hide "Results"
             }
         }
